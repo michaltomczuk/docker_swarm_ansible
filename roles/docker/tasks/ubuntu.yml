@@ -63,7 +63,7 @@
     dest=/etc/default/docker
     regexp='^DOCKER_OPTS="-H tcp://0.0.0.0:2375'
     insertafter='^#DOCKER_OPTS="--dns'
-    line='DOCKER_OPTS="-H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock --dns 172.17.0.1 --dns 8.8.8.8 --dns-search service.consul"'
+    line='DOCKER_OPTS="-H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock --cluster-store=consul://{{ ansible_host }}:8500 --cluster-advertise={{ ansible_host }}:2375 --dns 172.17.0.1 --dns 8.8.8.8 --dns-search service.consul"'
   when:
     ansible_distribution == 'Ubuntu' and
     ansible_distribution_release == 'trusty'
