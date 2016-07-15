@@ -1,4 +1,8 @@
-## Docker Swarm Cluster ##
+## What Does This Button (playbook) Do? ##
+
+This playbook asumes that we will create three node cluster with a Consul and Registrator as a autodiscovery backend.
+
+## Docker Swarm cluster ##
 
 This playbook covers creating SWARM cluster using:
 * Ubuntu 14.04 LTS
