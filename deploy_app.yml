@@ -1,0 +1,7 @@
+---
+- hosts: all_nodes
+  become: yes
+  become_method: sudo
+  roles:
+    - test_web_app
+    - reverse_proxy

@@ -1,0 +1,15 @@
+---
+- name: remove registrator contenier
+  docker:
+    name: registrator
+    image: gliderlabs/registrator
+    state: absent
+
+- name: setup registrator
+  docker:
+    name: registrator
+    image: gliderlabs/registrator
+    command: -ip {{ ansible_host }} consul://{{ ansible_host }}:8500
+    state: started
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock

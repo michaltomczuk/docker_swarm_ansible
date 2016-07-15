@@ -1,0 +1,25 @@
+---
+- hosts: all_nodes
+  become: yes
+  become_method: sudo
+  roles:
+    - docker
+
+- hosts: cluster_master
+  become: yes
+  become_method: sudo
+  roles:
+    - consul_cluster_create_master
+
+- hosts: cluster_members
+  become: yes
+  become_method: sudo
+  roles:
+    - consul_cluster_join_cluster
+
+- hosts: all_nodes
+  become: yes
+  become_method: sudo
+  roles:
+    - swarm_cluster
+    - registrator

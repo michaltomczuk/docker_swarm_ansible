@@ -1,0 +1,50 @@
+---
+- name: remove web-nginx contenier
+  docker:
+    name: web-nginx
+    image: nginx
+    state: absent
+
+- name: create content volume direcotry
+  file:
+    path=/opt/web
+    state=directory
+    mode=0755
+
+- name: create conf volume direcotry
+  file:
+    path=/opt/conf
+    state=directory
+    mode=0755
+
+- name: Upload content file
+  template:
+    src=index.html.j2
+    dest=/opt/web/index.html
+    owner=root
+    group=root
+    mode=0644
+
+- name: Upload conf file
+  template:
+    src=default.conf.j2
+    dest=/opt/conf/default.conf
+    owner=root
+    group=root
+    mode=0644
+
+- name: run web-nginx
+  docker:
+    name: web-nginx
+    image: nginx
+    state: started
+    ports:
+    - "8080:8080"
+    expose:
+    - 8080
+    volumes:
+    - /opt/web:/usr/share/nginx/html:ro
+    - /opt/conf/default.conf:/etc/nginx/conf.d/default.conf:ro
+    labels:
+      SERVICE_8080_NAME: web_server
+      SERVICE_TAGS: production

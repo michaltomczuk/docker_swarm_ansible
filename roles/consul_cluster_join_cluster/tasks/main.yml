@@ -1,0 +1,34 @@
+---
+- name: create volume
+  file:
+    path=/opt/consul
+    state=directory
+    mode=0755
+
+- name: remove consul-join contenier
+  docker:
+    name: consul_cluster_join
+    image: progrium/consul
+    state: absent
+
+- name: join to cluster
+  docker:
+    name: consul_cluster_join
+    image: progrium/consul
+    command: -server -advertise {{ ansible_host }} -node={{ ansible_hostname }} -join {{ consul_node01 }}
+    state: started
+    expose:
+    - 8300
+    - 8301
+    - 8302
+    ports:
+    - "{{ ansible_host }}:8300:8300"
+    - "{{ ansible_host }}:8301:8301"
+    - "{{ ansible_host }}:8301:8301/udp"
+    - "{{ ansible_host }}:8302:8302"
+    - "{{ ansible_host }}:8302:8302/udp"
+    - "{{ ansible_host }}:8400:8400"
+    - "{{ ansible_host }}:8500:8500"
+    - "172.17.0.1:53:53/udp"
+    volumes:
+      - /tmp:/data

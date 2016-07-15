@@ -1,0 +1,71 @@
+---
+- name: add apt key
+  apt_key:
+    keyserver=hkp://p80.pool.sks-keyservers.net:80
+    id=58118E89F3A912897C070ADBF76221572C52609D
+  when:
+    ansible_distribution == 'Ubuntu' and
+    ansible_distribution_release == 'trusty'
+
+- name: Add docker repo
+  template:
+    src=docker.list.j2
+    dest=/etc/apt/sources.list.d/docker.list
+    owner=root
+    group=root
+    mode=0644
+  when:
+    ansible_distribution == 'Ubuntu' and
+    ansible_distribution_release == 'trusty'
+
+- name: Install docker
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+    - docker-engine
+  when:
+    ansible_distribution == 'Ubuntu' and
+    ansible_distribution_release == 'trusty'
+
+- name: Install python
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+    - python-pip
+  when:
+    ansible_distribution == 'Ubuntu' and
+    ansible_distribution_release == 'trusty'
+
+- name: Upgrade latest pip, setuptools, docker-py and with pip
+  pip:
+    name: "{{ item.name }}"
+    state: latest
+  with_items:
+    - { name: pip }
+    - { name: setuptools }
+    - { name: docker-py }
+  when:
+    ansible_distribution == 'Ubuntu' and
+    ansible_distribution_release == 'trusty'
+
+- name: Ensure that docker service is started
+  service: name=docker state=started enabled=yes
+  when:
+    ansible_distribution == 'Ubuntu' and
+    ansible_distribution_release == 'trusty'
+
+- name: create docker group
+  group: name=docker state=present
+  when:
+    ansible_distribution == 'Ubuntu' and
+    ansible_distribution_release == 'trusty'
+
+- name: add extra options to docker deamon
+  lineinfile:
+    dest=/etc/default/docker
+    regexp='^DOCKER_OPTS="-H tcp://0.0.0.0:2375'
+    insertafter='^#DOCKER_OPTS="--dns'
+    line='DOCKER_OPTS="-H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock --dns 172.17.0.1 --dns 8.8.8.8 --dns-search service.consul"'
+  when:
+    ansible_distribution == 'Ubuntu' and
+    ansible_distribution_release == 'trusty'
+  notify:
+  - restart docker

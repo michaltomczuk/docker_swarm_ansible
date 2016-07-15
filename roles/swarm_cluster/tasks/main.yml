@@ -1,0 +1,29 @@
+---
+- name: remove swarm manager contenier
+  docker:
+    name: swarm-manager
+    image: swarm
+    state: absent
+
+- name: remove swarm-join contenier
+  docker:
+    name: swarm-join
+    image: swarm
+    state: absent
+
+- name: create swarm managers
+  docker:
+    name: swarm-manager
+    image: swarm
+    command: manage -H :4000 --replication --advertise {{ ansible_host }}:4000 consul://{{ consul_node01 }}:8500
+    state: started
+    expose:
+    - 4000
+    ports:
+    - 4000:4000
+
+- name: join node to the cluster
+  docker:
+    name: swarm-join
+    image: swarm
+    command: join --advertise={{ ansible_host }}:2375 consul://{{ consul_node01 }}:8500

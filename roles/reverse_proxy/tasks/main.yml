@@ -1,0 +1,35 @@
+---
+- name: remove reverse_proxy contenier
+  docker:
+    name: reverse_proxy
+    image: nginx
+    state: absent
+
+- name: create volume direcotry
+  file:
+    path=/opt/reverse_proxy/
+    state=directory
+    mode=0755
+
+- name: Upload conf file
+  template:
+    src=default.conf.j2
+    dest=/opt/reverse_proxy/default.conf
+    owner=root
+    group=root
+    mode=0644
+
+- name: run reverse_proxy
+  docker:
+    name: reverse_proxy
+    image: nginx
+    state: started
+    ports:
+    - "80:80"
+    expose:
+    - 80
+    volumes:
+    - /opt/reverse_proxy/default.conf:/etc/nginx/conf.d/default.conf:ro
+    labels:
+      SERVICE_80_NAME: reverse_proxy
+      SERVICE_TAGS: production

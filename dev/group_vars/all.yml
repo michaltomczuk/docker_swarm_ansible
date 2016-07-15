@@ -1,0 +1,14 @@
+---
+##
+## Swarm
+##
+
+nodes_in_the_cluster: 3
+
+##
+## Consul
+##
+
+consul_node01: 192.168.50.101
+consul_node02: 192.168.50.102
+consul_node03: 192.168.50.103
