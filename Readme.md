@@ -1,6 +1,6 @@
 ## What Does This Button (playbook) Do? ##
 
-This playbook asumes that we will create three node cluster with a Consul and Registrator as a autodiscovery backend.
+This playbook assumes that we will create three node cluster with a Consul and Registrator as a autodiscover backend.
 
 ## Docker Swarm cluster ##
 
@@ -80,7 +80,7 @@ node2                     running (virtualbox)
 node3                     running (virtualbox)
 ```
 
-We can also try to SSH to those vms using
+We can also try to SSH to those vms using ssh command
 
 ```bash
 
@@ -92,3 +92,28 @@ If all went well we can now deploy our playbook by executing
 ```bash
 ansible-playbook -i /dev/hosts create_swarm_cluster.yml
 ```
+
+## How to manage cluster? ##
+
+First of all lets check cluster status
+
+```bash
+docker -H 192.168.50.101:4000 info
+```
+and we should see that our cluster has three nodes and available resources are 6 CPUs and 6GB of RAM total.
+
+Next we can see what kind of containers we have running on the cluster
+
+```bash
+docker -H 192.168.50.101:4000 ps -a
+```
+
+also we can check Consul (cluster) UI which should be available under URL http://192.168.50.101.
+
+
+
+
+
+
+
+
