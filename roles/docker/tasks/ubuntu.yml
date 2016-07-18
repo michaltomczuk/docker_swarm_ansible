@@ -69,3 +69,10 @@
     ansible_distribution_release == 'trusty'
   notify:
   - restart docker
+
+- name: create docker user
+  user:
+    name=docker
+    comment="Docker user"
+    group=docker
+    shell=/bin/bash
