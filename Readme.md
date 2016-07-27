@@ -90,7 +90,7 @@ ssh root@192.168.50.101
 If all went well we can now deploy our playbook by executing
 
 ```bash
-ansible-playbook -i /dev/hosts create_swarm_cluster.yml
+ansible-playbook -i ./dev/hosts create_swarm_cluster.yml
 ```
 
 ## How to manage cluster? ##
@@ -108,7 +108,7 @@ Next we can see what kind of containers we have running on the cluster
 docker -H 192.168.50.101:4000 ps -a
 ```
 
-also we can check Consul (cluster) UI which should be available under URL http://192.168.50.101.
+also we can check Consul (cluster) UI which should be available under URL http://192.168.50.101:8500.
 
 
 
