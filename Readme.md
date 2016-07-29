@@ -1,3 +1,20 @@
+# Docker Swarm Cluster Back by Consul and Registrator
+
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
+**Table of Contents**
+
+- [Docker Swarm Cluster Back by Consul and Registrator](#docker-swarm-cluster-back-by-consul-and-registrator)
+    - [What Does This Button (playbook) Do?](#what-does-this-button-playbook-do)
+    - [Docker Swarm cluster](#docker-swarm-cluster)
+    - [Prepare environment](#prepare-environment)
+    - [How to create dev environment on local machine](#how-to-create-dev-environment-on-local-machine)
+    - [How to manage cluster?](#how-to-manage-cluster)
+    - [Features Walk-through](#features-walk-through)
+    - [Sample Web App deploy](#sample-web-app-deploy)
+
+<!-- markdown-toc end -->
+
+
 ## What Does This Button (playbook) Do? ##
 
 This playbook assumes that we will create three node cluster with a Consul and Registrator as a autodiscover backend.
@@ -231,3 +248,27 @@ also we can check Consul (cluster) UI which should be available under URL http:/
    ```
 
     > Note that the registrator recognizes the same service based on the image name and the port (nginx-80).
+
+## Sample Web App deploy ##
+
+The following Ansible playbook will deploy a sample web application:
+
+```bash
+ansible-playbook -i ./dev/hosts deploy_app.yml
+```
+
+The app runs on every node and serves a simple html file that says on which node it resides:
+http://192.168.50.101:8080
+http://192.168.50.102:8080
+http://192.168.50.103:8080
+
+Thanks to the registrator the service is automatically registered as a `web_server` service
+(the name is set via docker labels in an Ansible task for test_web_app).
+
+What's more, this playbook starts reverse_proxy service that makes use of the built-in load balancing
+mechanism and redirects every HTTP request on port 80 to web_server.service.consul - as a result every
+HTTP request to any of the nodes is load-balanced. Try executing the below command several times:
+
+```bash
+curl 192.168.50.101
+```
