@@ -167,8 +167,8 @@ also we can check Consul (cluster) UI which should be available under URL http:/
 
     If your containers where started on node1 and node3:
 
-    http://192.168.50.101:8090
-    http://192.168.50.103:8090
+    http://192.168.50.101:8090  
+    http://192.168.50.103:8090  
 
 4. Get information about the service:
    via consul REST API exposed by every node in the cluster:
@@ -258,9 +258,9 @@ ansible-playbook -i ./dev/hosts deploy_app.yml
 ```
 
 The app runs on every node and serves a simple html file that says on which node it resides:
-http://192.168.50.101:8080
-http://192.168.50.102:8080
-http://192.168.50.103:8080
+http://192.168.50.101:8080  
+http://192.168.50.102:8080  
+http://192.168.50.103:8080  
 
 Thanks to the registrator the service is automatically registered as a `web_server` service
 (the name is set via docker labels in an Ansible task for test_web_app).
