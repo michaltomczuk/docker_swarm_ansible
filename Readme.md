@@ -230,4 +230,4 @@ also we can check Consul (cluster) UI which should be available under URL http:/
       docker -H 192.168.50.102:4000 run --name nginx-single3 -v /opt/web:/usr/share/nginx/html:ro -d -p 8090:80 nginx
    ```
 
-    > Note that the registry recognizes the same service based on the image name and the port (nginx-80).
+    > Note that the registrator recognizes the same service based on the image name and the port (nginx-80).
